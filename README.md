@@ -2,6 +2,9 @@
 
 [![作者](https://img.shields.io/badge/%E4%BD%9C%E8%80%85-KyonHuang-7AD6FD.svg)](http://kyonhuang.top)
 
+## html 版本
+
+由于 md 文件中 LaTeX 的显示不是很好，我每隔一段时间将笔记整理一个 [html 版本](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/)。欢迎点击查看。
 
 ## Neural_Networks_and_Deep_Learning
 
