@@ -4,11 +4,12 @@
 
 ## html 版本
 
-由于 md 文件中 LaTeX 的显示不是很好，我每隔一段时间将笔记整理一个 [html 版本](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/)。欢迎点击查看。
+由于 md 文件中 LaTeX 在 Github 上的显示不是很好，我每隔一段时间将笔记整理一个 [html 版本](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/)。欢迎点击查看。
 
 ## Neural_Networks_and_Deep_Learning
 
 * [神经网络基础](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes/blob/master/Neural_Networks_and_Deep_Learning/神经网络基础.md)
+* [浅层神经网络](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes/blob/master/Neural_Networks_and_Deep_Learning/浅层神经网络.md)
 
 ## 课程地址
 
