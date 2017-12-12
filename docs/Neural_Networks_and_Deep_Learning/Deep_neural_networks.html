@@ -5,7 +5,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>index</title>
+<title>深层神经网络</title>
 
 
 <style type="text/css">
@@ -511,29 +511,99 @@ pre.line-numbers > code {
 
 <body>
 
-<h1 align="center">吴恩达《深度学习》课程笔记及代码</h1>
+<h1 align="center">深层神经网络</h1>
 
-<p align="center"><a href="http://kyonhuang.top"><img src="https://img.shields.io/badge/%E4%BD%9C%E8%80%85-KyonHuang-7AD6FD.svg"></a></p>
+<h2 id="toc_0">深层网络中的前向和反向传播</h2>
 
-<h2 id="toc_0">Neural Networks and Deep Learning</h2>
+<h3 id="toc_1">前向传播</h3>
+
+<p>Input：a^[l−1]</p>
+
+<p>Output：a^[l]，cache(z^[l])</p>
+
+<h4 id="toc_2">公式</h4>
+
+<p>$$Z^{[l]}=W^{[l]}\cdot a^{[l-1]}+b^{[l]}$$</p>
+
+<p>$$a^{[l]}=g^{[l]}(Z^{[l]})$$</p>
+
+<h3 id="toc_3">反向传播</h3>
+
+<p>Input：da^[l]</p>
+
+<p>Output：da^[l−1]，dW^[l]，db^[l]</p>
+
+<h4 id="toc_4">公式</h4>
+
+<p>$$dZ^{[l]}=da^{[l]}*g^{[l]}{&#39;}(Z^{[l]})$$</p>
+
+<p>$$dW^{[l]}=dZ^{[l]}\cdot a^{[l-1]}$$</p>
+
+<p>$$db^{[l]}=dZ^{[l]}$$</p>
+
+<p>$$da^{[l-1]}=W^{[l]T}\cdot dZ^{[l]}$$</p>
+
+<h3 id="toc_5">搭建深层神经网络块</h3>
+
+<p><img src="forward-and-backward-functions.png" alt="forward-and-backward-functions"></p>
+
+<p>神经网络的一步训练（一个梯度下降循环），包含了从 $$a^{[0]}$$（即 x）经过一系列正向传播计算得到 $$\hat y$$ （即 a^[l]）。然后再计算 da^[l] ，开始实现反向传播，得到所有的导数项，W 和 b 也会在每一层被更新。</p>
+
+<p>在代码实现时，可以将正向传播过程中计算出来的 z 值缓存下来，待到反向传播计算时使用。</p>
+
+<h2 id="toc_6">矩阵的维度</h2>
+
+<p>$$W^{[l]}: (n^{[l]}, n^{[l-1]})$$</p>
+
+<p>$$b^{[l]}: (n^{[l]}, 1)$$</p>
+
+<p>$$dW^{[l]}: (n^{[l]}, n^{[l-1]})$$</p>
+
+<p>$$db^{[l]}: (n^{[l]}, 1)$$</p>
+
+<p>对于 Z、a，向量化之前有：</p>
+
+<p>$$Z^{[l]}, a^{[l]}: (n^{[l]}, 1)$$</p>
+
+<p>而在向量化之后，则有：</p>
+
+<p>$$Z^{[l]}, A^{[l]}: (n^{[l]}, m)$$</p>
+
+<p>在计算反向传播时，dZ、dA 的维度和 Z、A 是一样的。</p>
+
+<h2 id="toc_7">使用深层表示的原因</h2>
+
+<p>对于人脸识别，神经网络的第一层从原始图片中提取人脸的轮廓和边缘，每个神经元学习到不同边缘的信息；网络的第二层将第一层学得的边缘信息组合起来，形成人脸的一些局部的特征，例如眼睛、嘴巴等；后面的几层逐步将上一层的特征组合起来，形成人脸的模样。随着神经网络层数的增加，特征也从原来的边缘逐步扩展为人脸的整体，由整体到局部，由简单到复杂。层数越多，那么模型学习的效果也就越精确。</p>
+
+<p>同样的，对于语音识别，第一层神经网络可以学习到语言发音的一些音调，后面更深层次的网络可以检测到基本的音素，再到单词信息，逐渐加深可以学到短语、句子。</p>
+
+<p>通过例子可以看到，随着神经网络的深度加深，模型能学习到更加复杂的问题，功能也更加强大。</p>
+
+<h2 id="toc_8">参数和超参数</h2>
+
+<p><strong>参数</strong>即是我们在过程中想要模型学习到的信息，W[l]，b[l]。而<strong>超参数（hyper parameters）</strong>即为控制参数的输出值的一些网络信息。超参数的改变会导致最终得到的参数 W[l]，b[l] 的改变。</p>
+
+<p>典型的超参数有：</p>
 
 <ul>
-<li><a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Neural_Networks_and_Deep_Learning/Neural_Networks_Basics">神经网络基础</a></li>
-<li><a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Neural_Networks_and_Deep_Learning/Shallow_neural_networks">浅层神经网络</a></li>
-<li><a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Neural_Networks_and_Deep_Learning/Deep_neural_networks">深层神经网络</a></li>
+<li>学习速率：α</li>
+<li>迭代次数：N</li>
+<li>隐藏层的层数：L</li>
+<li>每一层的神经元个数：n[1]，n[2]，...</li>
+<li>激活函数 g(z) 的选择</li>
 </ul>
 
-<h2 id="toc_1">课程地址</h2>
+<p>当开发新应用时，预先很难准确知道超参数的最优值应该是什么。因此，通常需要尝试很多不同的值。应用深度学习领域是一个很大程度基于经验的过程。</p>
 
-<p><a href="https://mooc.study.163.com/course/2001281002#/info">神经网络和深度学习 - 网易云课堂</a></p>
+<h3 id="toc_9">参考资料</h3>
 
-<h2 id="toc_2">LICENSE</h2>
-
-<p>本项目所有文章采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！ </p>
+<p><a href="http://blog.csdn.net/Koala_Tree/article/details/78087711">吴恩达Coursera深度学习课程 DeepLearning.ai 提炼笔记（1-4）-- 深层神经网络</a></p>
 
 <p align="center">
 @Kyon Huang <a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/">首页</a> | <a href="https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes">Github</a>
 </p>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=default"></script>
 
 
 

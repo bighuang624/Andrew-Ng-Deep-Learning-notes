@@ -6,6 +6,7 @@
 
 * [神经网络基础](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Neural_Networks_and_Deep_Learning/Neural_Networks_Basics)
 * [浅层神经网络](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Neural_Networks_and_Deep_Learning/Shallow_neural_networks)
+* [深层神经网络](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Neural_Networks_and_Deep_Learning/Deep_neural_networks)
 
 ## 课程地址
 
