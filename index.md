@@ -8,6 +8,12 @@
 * [浅层神经网络](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Neural_Networks_and_Deep_Learning/Shallow_neural_networks)
 * [深层神经网络](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Neural_Networks_and_Deep_Learning/Deep_neural_networks)
 
+## Improving Deep Neural Networks: Hyperparameter tuning, Regularization and Optimization
+
+* [](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Practical_aspects_of_Deep_Learning)
+* [](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Optimization_algorithms)
+* [](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Hyperparameter_tuning_Batch_Normalization_and_Programming_Frameworks)
+
 ## 课程地址
 
 [神经网络和深度学习 - 网易云课堂](https://mooc.study.163.com/course/2001281002#/info)

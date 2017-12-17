@@ -12,6 +12,8 @@
 * [浅层神经网络](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes/blob/master/Neural_Networks_and_Deep_Learning/浅层神经网络.md)
 * [深层神经网络](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes/blob/master/Neural_Networks_and_Deep_Learning/深层神经网络.md)
 
+## Improving Deep Neural Networks: Hyperparameter tuning, Regularization and Optimization
+
 ## 课程地址
 
 [神经网络和深度学习 - 网易云课堂](https://mooc.study.163.com/course/2001281002#/info)
