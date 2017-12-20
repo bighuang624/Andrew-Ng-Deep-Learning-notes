@@ -10,9 +10,9 @@
 
 ## Improving Deep Neural Networks: Hyperparameter tuning, Regularization and Optimization
 
-* [](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Practical_aspects_of_Deep_Learning)
-* [](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Optimization_algorithms)
-* [](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Hyperparameter_tuning_Batch_Normalization_and_Programming_Frameworks)
+* [深度学习的实用层面](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Practical_aspects_of_Deep_Learning)
+* [优化算法](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Optimization_algorithms)
+* [超参数调试、Batch 正则化和程序框架](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Hyperparameter_tuning_Batch_Normalization_and_Programming_Frameworks)
 
 ## 课程地址
 
