@@ -16,6 +16,8 @@
 
 ### Improving Deep Neural Networks: Hyperparameter tuning, Regularization and Optimization
 
+* [深度学习的实用层面](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes/blob/master/Improving_Deep_Neural_Networks/深度学习的实用层面.md)
+
 ## 代码
 
 各课练习代码请在相应文件夹下查找。
