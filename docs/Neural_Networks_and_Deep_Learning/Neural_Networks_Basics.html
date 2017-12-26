@@ -562,7 +562,7 @@ pre.line-numbers > code {
 
 <p>损失函数是在单个训练样本中定义的，它衡量了在<strong>单个</strong>训练样本上的表现。而<strong>代价函数（cost function，或者称作成本函数）</strong>衡量的是在<strong>全体</strong>训练样本上的表现，即衡量参数 w 和 b 的效果。</p>
 
-<p>$$J(w,b) = \frac{1}{m}\sum_{i=1}^mL(\hat{y},y)$$</p>
+<p>$$J(w,b) = \frac{1}{m}\sum_{i=1}^mL(\hat{y}^{(i)},y^{(i)})$$</p>
 
 <h3 id="toc_2">参考资料</h3>
 
@@ -622,7 +622,7 @@ pre.line-numbers > code {
 
 <p>我们可以对于某个权重参数 w1，其导数计算为：</p>
 
-<p>$$\frac{\partial J(w,b)}{\partial{w1}}=\frac{1}{m}\sum^m_{i=1}\frac{\partial}{\partial{w1}L(a^{(i)},y^{(i)})}$$</p>
+<p>$$\frac{\partial J(w,b)}{\partial{w_1}}=\frac{1}{m}\sum^m_{i=1}\frac{\partial}{\partial{w_1}L(a^{(i)},y^{(i)})}$$</p>
 
 <p>完整的 Logistic 回归中某次训练的流程如下，这里仅假设特征向量的维度为 2：</p>
 
