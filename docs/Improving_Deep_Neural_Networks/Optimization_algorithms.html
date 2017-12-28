@@ -5,7 +5,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>深度学习的实用层面</title>
+<title>优化算法</title>
 
 
 <style type="text/css">
@@ -511,346 +511,297 @@ pre.line-numbers > code {
 
 <body>
 
-<h1 align="center">深度学习的实用层面</h1>
+<h1 align="center">优化算法</h1>
 
-<h2 id="toc_0">数据划分：训练 / 开发 / 测试集</h2>
+<p>深度学习难以在大数据领域发挥最大效果的一个原因是，在巨大的数据集基础上进行训练速度很慢。而优化算法能够帮助快速训练模型，大大提高效率。</p>
 
-<p>应用深度学习是一个典型的迭代过程。</p>
+<h2 id="toc_0">batch 梯度下降法</h2>
 
-<p>对于一个需要解决的问题的样本数据，在建立模型的过程中，数据会被划分为以下几个部分：</p>
+<p><strong>batch 梯度下降法</strong>（批梯度下降法，我们之前一直使用的梯度下降法）是最常用的梯度下降形式，即同时处理整个训练集。其在更新参数时使用所有的样本来进行更新。</p>
 
-<ul>
-<li>训练集（train set）：用训练集对算法或模型进行<strong>训练</strong>过程；</li>
-<li>验证集（development set）：利用验证集（又称为简单交叉验证集，hold-out cross validation set）进行<strong>交叉验证</strong>，<strong>选择出最好的模型</strong>；</li>
-<li>测试集（test set）：最后利用测试集对模型进行测试，<strong>获取模型运行的无偏估计</strong>（对学习方法进行评估）。</li>
-</ul>
+<p>对整个训练集进行梯度下降法的时候，我们必须处理整个训练数据集，然后才能进行一步梯度下降，即每一步梯度下降法需要对整个训练集进行一次处理，如果训练数据集很大的时候，处理速度就会比较慢。</p>
 
-<p>在<strong>小数据量</strong>的时代，如 100、1000、10000 的数据量大小，可以将 data 按照以下比例进行划分：</p>
+<p>但是如果每次处理训练数据的一部分即进行梯度下降法，则我们的算法速度会执行的更快。而处理的这些一小部分训练子集即称为 <strong>mini-batch</strong>。</p>
 
-<ul>
-<li>无验证集的情况：70% / 30%；</li>
-<li>有验证集的情况：60% / 20% / 20%；</li>
-</ul>
+<h2 id="toc_1">Mini-Batch 梯度下降法</h2>
 
-<p>而在如今的<strong>大数据时代</strong>，对于一个问题，我们拥有的 data 的数量可能是百万级别的，所以验证集和测试集所占的比重会趋向于变得更小。</p>
+<p><strong>Mini-Batch 梯度下降法</strong>（小批量梯度下降法）每次同时处理单个的 mini-batch，其他与 batch 梯度下降法一致。</p>
 
-<p>验证集的目的是为了验证不同的算法哪种更加有效，所以验证集只要足够大到能够验证大约 2-10 种算法哪种更好，而不需要使用 20% 的数据作为验证集。如百万数据中抽取 1 万的数据作为验证集就可以了。</p>
+<p>使用 batch 梯度下降法，对整个训练集的一次遍历只能做一个梯度下降；而使用 Mini-Batch 梯度下降法，对整个训练集的一次遍历（称为一个 epoch）能做 mini-batch 个数个梯度下降。之后，可以一直遍历训练集，直到最后收敛到一个合适的精度。</p>
 
-<p>测试集的主要目的是评估模型的效果，如在单个分类器中，往往在百万级别的数据中，我们选择其中 1000 条数据足以评估单个模型的效果。</p>
+<p>batch 梯度下降法和 Mini-batch 梯度下降法代价函数的变化趋势如下：</p>
+
+<p><img src="training-with-mini-batch-gradient-descent.png" alt="training-with-mini-batch-gradient-descent"></p>
+
+<h3 id="toc_2">batch 的不同大小（size）带来的影响</h3>
 
 <ul>
-<li>100 万数据量：98% / 1% / 1%；</li>
-<li>超百万数据量：99.5% / 0.25% / 0.25%（或者99.5% / 0.4% / 0.1%）</li>
+<li>mini-batch 的大小为 1，即是<strong>随机梯度下降法（stochastic gradient descent）</strong>，每个样本都是独立的 mini-batch；</li>
+<li>mini-batch 的大小为 m（数据集大小），即是 batch 梯度下降法；</li>
 </ul>
 
-<h3 id="toc_1">建议</h3>
-
-<p>建议<strong>验证集要和训练集来自于同一个分布</strong>（数据来源一致），可以使得机器学习算法变得更快并获得更好的效果。</p>
-
-<p>如果不需要用<strong>无偏估计</strong>来评估模型的性能，则可以不需要测试集。</p>
-
-<h3 id="toc_2">补充：交叉验证（cross validation）</h3>
-
-<p>交叉验证的基本思想是重复地使用数据；把给定的数据进行切分，将切分的数据集组合为训练集与测试集，在此基础上反复地进行训练、测试以及模型选择。</p>
-
-<h3 id="toc_3">参考资料</h3>
-
-<p><a href="https://baike.baidu.com/item/%E6%97%A0%E5%81%8F%E4%BC%B0%E8%AE%A1/3370664?fr=aladdin">无偏估计_百度百科</a></p>
-
-<h2 id="toc_4">模型估计：偏差 / 方差</h2>
-
-<p>在<strong>欠拟合（underfitting）</strong>的情况下，出现高偏差<strong>（high bias）</strong>的情况，即不能很好地对数据进行分类。</p>
-
-<p>当模型设置的太复杂时，训练集中的一些噪声没有被排除，使得模型出现<strong>过拟合（overfitting）</strong>的情况，在验证集上出现<strong>高方差（high variance）</strong>的现象。</p>
-
-<p>当训练出一个模型以后，如果：</p>
+<p><img src="choosing-mini-batch-size.png" alt="choosing-mini-batch-size"></p>
 
 <ul>
-<li>训练集的错误率较小，而验证集的错误率却较大，说明模型存在较大方差，可能出现了过拟合；</li>
-<li>训练集和开发集的错误率都较大，且两者相当，说明模型存在较大偏差，可能出现了欠拟合；</li>
-<li>训练集错误率较大，且开发集的错误率远较训练集大，说明方差和偏差都较大，模型很差；</li>
-<li>训练集和开发集的错误率都较小，且两者的相差也较小，说明方差和偏差都较小，这个模型效果比较好。</li>
-</ul>
-
-<p>偏差和方差的权衡问题对于模型来说十分重要。</p>
-
-<p>最优误差通常也称为“贝叶斯误差”。</p>
-
-<h3 id="toc_5">应对方法</h3>
-
-<p>存在高偏差：</p>
+<li><p>batch 梯度下降法：</p>
 
 <ul>
-<li>扩大网络规模，如添加隐藏层或隐藏单元数目；</li>
-<li>寻找合适的网络架构，使用更大的 NN 结构；</li>
-<li>花费更长时间训练。</li>
-</ul>
-
-<p>存在高方差：</p>
-
-<ul>
-<li>获取更多的数据；</li>
-<li>正则化（regularization）；</li>
-<li>寻找更合适的网络结构。</li>
-</ul>
-
-<p>不断尝试，直到找到低偏差、低方差的框架。</p>
-
-<p>在深度学习的早期阶段，没有太多方法能做到只减少偏差或方差而不影响到另外一方。而在大数据时代，深度学习对监督式学习大有裨益，使得我们不用像以前一样太过关注如何平衡偏差和方差的权衡问题，通过以上方法可以在不增加某一方的前提下减少另一方的值。</p>
-
-<h2 id="toc_6">正则化（regularization）</h2>
-
-<p><strong>正则化</strong>是在成本函数中加入一个正则化项，惩罚模型的复杂度。正则化可以用于解决低方差的问题。</p>
-
-<h3 id="toc_7">Logistic 回归中的正则化</h3>
-
-<p>对于 Logistic 回归，加入 L2 正则化（也称“L2 范数”）的成本函数：</p>
-
-<p>$$J(w,b) = \frac{1}{m}\sum_{i=1}^mL(\hat{y}^{(i)},y^{(i)})+\frac{\lambda}{2m}{||w||}^2_2$$</p>
+<li>对所有 m 个训练样本执行一次梯度下降，<strong>每一次迭代时间较长，训练过程慢</strong>； </li>
+<li>相对噪声低一些，幅度也大一些；</li>
+<li>成本函数总是向减小的方向下降。</li>
+</ul></li>
+<li><p>随机梯度下降法：</p>
 
 <ul>
-<li>L2 正则化：$$\frac{\lambda}{2m}{||w||}^2_2 = \frac{\lambda}{2m}\sum_{j=1}^{n_x}w^2_j = \frac{\lambda}{2m}w^Tw$$</li>
-<li>L1 正则化：$$\frac{\lambda}{2m}{||w||}_1 = \frac{\lambda}{2m}\sum_{j=1}^{n_x}{|w_j|}$$</li>
+<li>对每一个训练样本执行一次梯度下降，训练速度快，但<strong>丢失了向量化带来的计算加速</strong>；</li>
+<li>有很多噪声，减小学习率可以适当；</li>
+<li>成本函数总体趋势向全局最小值靠近，但永远不会收敛，而是一直在最小值附近波动。</li>
+</ul></li>
 </ul>
 
-<p>其中，λ 为<strong>正则化因子</strong>，是<strong>超参数</strong>。</p>
+<p>因此，选择一个<code>1 &lt; size &lt; m</code>的合适的大小进行 Mini-batch 梯度下降，可以实现快速学习，也应用了向量化带来的好处，且成本函数的下降处于前两者之间。</p>
 
-<p>由于 L1 正则化最后得到 w 向量中将存在大量的 0，使模型变得稀疏化，因此 L2 正则化更加常用。</p>
-
-<p><strong>注意</strong>，<code>lambda</code>在 Python 中属于保留字，所以在编程的时候，用<code>lambd</code>代替这里的正则化因子。</p>
-
-<h3 id="toc_8">神经网络中的正则化</h3>
-
-<p>对于神经网络，加入正则化的成本函数：</p>
-
-<p>$$J(w^{[1]}, b^{[1]}, ..., w^{[L]}, b^{[L]}) = \frac{1}{m}\sum_{i=1}^mL(\hat{y}^{(i)},y^{(i)})+\frac{\lambda}{2m}\sum_{l=1}^L{{||w^{[l]}||}}^2_F$$</p>
-
-<p>因为 w 的大小为<code>(n^[l−1], n^[l])</code>，因此</p>
-
-<p>$${{||w^{[l]}||}}^2_F = \sum^{n^{[l-1]}}_{i=1}\sum^{n^{[l]}}_{j=1}(w^{[l]}_{ij})^2$$</p>
-
-<p>该矩阵范数被称为<strong>弗罗贝尼乌斯范数（Frobenius Norm）</strong>，所以神经网络中的正则化项被称为弗罗贝尼乌斯范数矩阵。</p>
-
-<h4 id="toc_9">权重衰减（Weight decay）</h4>
-
-<p>在加入正则化项后，梯度变为</p>
-
-<p>$$dW^{[l]}= \frac{\partial L}{\partial w^{[l]}} +\frac{\lambda}{m}W^{[l]}$$</p>
-
-<p>代入梯度更新公式：</p>
-
-<p>$$W^{[l]} := W^{[l]}-\alpha dW^{[l]}$$</p>
-
-<p>可得：</p>
-
-<p>$$W^{[l]} := W^{[l]} - \alpha [\frac{\partial L}{\partial w^{[l]}} + \frac{\lambda}{m}W^{[l]}]$$</p>
-
-<p>$$= W^{[l]} - \alpha \frac{\lambda}{m}W^{[l]} - \alpha \frac{\partial L}{\partial w^{[l]}}$$</p>
-
-<p>$$= (1 - \frac{\alpha\lambda}{m})W^{[l]} - \alpha \frac{\partial L}{\partial w^{[l]}}$$</p>
-
-<p>其中，</p>
-
-<p>$$(1 - \frac{\alpha\lambda}{m})W^{[l]}&lt;1$$</p>
-
-<p>会给原来的<code>W^[l]</code>一个衰减的参数。所以 L2 正则化项也被称为<strong>权重衰减（Weight Decay）</strong>。</p>
-
-<h3 id="toc_10">正则化可以减小过拟合的原因</h3>
-
-<h4 id="toc_11">直观解释</h4>
-
-<p>正则化因子设置的足够大的情况下，为了使成本函数最小化，权重矩阵 W 就会被设置为接近于 0 的值，<strong>直观上</strong>相当于消除了很多神经元的影响，那么大的神经网络就会变成一个较小的网络。当然，实际上隐藏层的神经元依然存在，但是其影响减弱了，便不会导致过拟合。</p>
-
-<h4 id="toc_12">数学解释</h4>
-
-<p>假设神经元中使用的激活函数为<code>g(z) = tanh(z)</code>（sigmoid 同理）。</p>
-
-<p><img src="regularization_prevent_overfitting.png" alt="regularization_prevent_overfitting"></p>
-
-<p>在加入正则化项后，当 λ 增大，导致<code>W^[l]</code>减小，<code>Z^[l] = W^[l]a^[l-1] + b^[l]</code>便会减小。由上图可知，在 z 较小（接近于 0）的区域里，<code>tanh(z)</code>函数近似线性，所以每层的函数就近似线性函数，整个网络就成为一个简单的近似线性的网络，因此不会发生过拟合。</p>
-
-<h4 id="toc_13">其他解释</h4>
-
-<p>在权值<code>w^[L]</code>变小之下，输入样本 X 随机的变化不会对神经网络模造成过大的影响，神经网络受局部噪音的影响的可能性变小。这就是正则化能够降低模型方差的原因。</p>
-
-<h2 id="toc_14">dropout 正则化</h2>
-
-<p><strong>dropout（随机失活）</strong>是在神经网络的隐藏层为每个神经元结点设置一个随机消除的概率，保留下来的神经元形成一个结点较少、规模较小的网络用于训练。dropout 正则化较多地被使用在<strong>计算机视觉（Computer Vision）</strong>领域。</p>
-
-<p><img src="dropout_regularization.png" alt="dropout_regularization"></p>
-
-<h3 id="toc_15">反向随机失活（Inverted dropout）</h3>
-
-<p>反向随机失活是实现 dropout 的方法。对第<code>l</code>层进行 dropout：</p>
-
-<div><pre class="line-numbers"><code class="language-python">keep_prob = 0.8    # 设置神经元保留概率
-dl = np.random.rand(al.shape[0], al.shape[1]) &lt; keep_prob
-al = np.multiply(al, dl)
-al /= keep_prob</code></pre></div>
-
-<p>最后一步<code>al /= keep_prob</code>是因为<code>a^[l]</code>中的一部分元素失活（相当于被归零），为了在下一层计算时不影响<code>Z^[l+1] = W^[l+1]a^[l] + b^[l+1]</code>的期望值，因此除以一个<code>keep_prob</code>。</p>
-
-<p><strong>注意</strong>，在<strong>测试阶段不要使用 dropout</strong>，因为那样会使得预测结果变得随机。</p>
-
-<h3 id="toc_16">理解 dropout</h3>
-
-<p>对于单个神经元，其工作是接收输入并产生一些有意义的输出。但是加入了 dropout 后，输入的特征都存在被随机清除的可能，所以该神经元不会再特别依赖于任何一个输入特征，即不会给任何一个输入特征设置太大的权重。</p>
-
-<p>因此，通过传播过程，dropout 将产生和 L2 正则化相同的<strong>收缩权重</strong>的效果。</p>
-
-<p>对于不同的层，设置的<code>keep_prob</code>也不同。一般来说，神经元较少的层，会设<code>keep_prob</code>为 1.0，而神经元多的层则会设置比较小的<code>keep_prob</code>。</p>
-
-<p>dropout 的一大<strong>缺点</strong>是成本函数无法被明确定义。因为每次迭代都会随机消除一些神经元结点的影响，因此无法确保成本函数单调递减。因此，使用 dropout 时，先将<code>keep_prob</code>全部设置为 1.0 后运行代码，确保<code>J(w, b)</code>函数单调递减，再打开 dropout。</p>
-
-<h2 id="toc_17">其他正则化方法</h2>
+<h3 id="toc_3">mini-batch 大小的选择</h3>
 
 <ul>
-<li>数据扩增（Data Augmentation）：通过图片的一些变换（翻转，局部放大后切割等），得到更多的训练集和验证集。</li>
-<li>早停止法（Early Stopping）：将训练集和验证集进行梯度下降时的成本变化曲线画在同一个坐标轴内，在两者开始发生较大偏差时及时停止迭代，避免过拟合。这种方法的缺点是无法同时达成偏差和方差的最优。</li>
+<li>如果训练样本的大小比较小，如 m ⩽ 2000 时，选择 batch 梯度下降法；</li>
+<li>如果训练样本的大小比较大，选择 Mini-Batch 梯度下降法。为了和计算机的信息存储方式相适应，代码在 mini-batch 大小为 2 的幂次时运行要快一些。典型的大小为 2^6、2^7、...、2^9；</li>
+<li>mini-batch 的大小要符合 CPU/GPU 内存。</li>
 </ul>
 
-<h2 id="toc_18">归一化输入</h2>
+<p>mini-batch 的大小也是一个重要的超变量，需要根据经验快速尝试，找到能够最有效地减少成本函数的值。</p>
 
-<h3 id="toc_19">归一化公式</h3>
-
-<p>$$x = \frac{x - \mu}{\sigma}$$</p>
-
-<p>其中，</p>
-
-<p>$$\mu = \frac{1}{m}\sum^m_{i=1}x^{(i)}$$</p>
-
-<p>$$\sigma = \sqrt{\frac{1}{m}\sum^m_{i=1}x^{{(i)}^2}}$$</p>
-
-<p>（注意，课程上对应内容中的归一化公式疑似有误，将标准差写成了方差，此处进行修正）</p>
-
-<h3 id="toc_20">使用归一化的原因</h3>
-
-<p><img src="why_normalize.png" alt="why_normalize"></p>
-
-<p>有图可知，使用归一化前后，成本函数的形状有较大差别。</p>
-
-<p>在不使用归一化的成本函数中，如果设置一个较小的学习率，可能需要很多次爹地才能到达全局最优解；而如果使用了归一化，那么无论从哪个位置开始迭代，都能以相对较少的迭代次数找到全局最优解。</p>
-
-<h2 id="toc_21">梯度消失和梯度爆炸</h2>
-
-<p>在梯度函数上出现的以指数级递增或者递减的情况分别称为<strong>梯度爆炸</strong>或者<strong>梯度消失</strong>。</p>
-
-<p>假定<code>g(z) = z, b^[l] = 0</code>，对于目标输出有：</p>
-
-<p>$$\hat{y} = W^{[L]}W^{[L-1]}...W^{[2]}W^{[1]}X$$</p>
+<h3 id="toc_4">符号表示</h3>
 
 <ul>
-<li>对于<code>W^[l]</code>的值大于 1 的情况，激活函数的值将以指数级递增；</li>
-<li>对于<code>W^[l]</code>的值小于 1 的情况，激活函数的值将以指数级递减。</li>
+<li>使用上角小括号 i 表示训练集里的值，x^(i) 是第 i 个训练样本；</li>
+<li>使用上角中括号 l 表示神经网络的层数，z^[l] 表示神经网络中第 l 层的 z 值；</li>
+<li>现在引入大括号 t 来代表不同的 mini-batch，因此有 X^{t}、Y^{t}。</li>
 </ul>
 
-<p>对于导数同理。因此，在计算梯度时，根据不同情况梯度函数会以指数级递增或递减，导致训练导数难度上升，梯度下降算法的步长会变得非常小，需要训练的时间将会非常长。</p>
+<h2 id="toc_5">指数平均加权</h2>
 
-<h3 id="toc_22">利用初始化缓解梯度消失和爆炸</h3>
+<p><strong>指数加权平均（Exponentially Weight Average）</strong>是一种常用的序列数据处理方式，计算公式为：</p>
 
-<p>根据</p>
+<p>$$
+S_t = 
+\begin{cases} 
+Y_1, &amp;t = 1 \\ 
+\beta Y_t + (1-\beta)S_{t-1}, &amp;t &gt; 1 
+\end{cases}
+$$</p>
 
-<p>$$z={w}_1{x}_1+{w}_2{x}_2 + ... + {w}_n{x}_n + b$$</p>
+<p>其中 Yt 为 t 下的实际值，St 为 t 下加权平均后的值，β 为权重值。</p>
 
-<p>可知，当输入的数量 n 较大时，我们希望每个 wi 的值都小一些，这样它们的和得到的 z 也较小。</p>
+<p>指数加权平均数在统计学中被称为“指数加权移动平均值”。</p>
 
-<p>为了得到较小的 wi，设置<code>Var(wi)=1/n</code>，这里称为Xavier initialization。</p>
+<p><img src="Exponentially-weight-average.png" alt="Exponentially-weight-average"></p>
 
-<div><pre class="line-numbers"><code class="language-python">WL = np.random.randn(WL.shape[0], WL.shape[1]) * np.sqrt(1/n)</code></pre></div>
+<p>给定一个时间序列，例如伦敦一年每天的气温值，图中蓝色的点代表真实数据。对于一个即时的气温值，取权重值 β 为 0.9，根据求得的值可以得到图中的红色曲线，它反映了气温变化的大致趋势。</p>
 
-<p>其中 n 是输入的神经元个数，即<code>WL.shape[1]</code>。</p>
+<p>当取权重值 β=0.98 时，可以得到图中更为平滑的绿色曲线。而当取权重值 β=0.5 时，得到图中噪点更多的黄色曲线。<strong>β 越大相当于求取平均利用的天数越多</strong>，曲线自然就会越平滑而且越滞后。</p>
 
-<p>这样，激活函数的输入 x 近似设置成均值为 0，标准方差为 1，神经元输出 z 的方差就归一化到 1 了。虽然没有解决梯度消失和爆炸的问题，但其在一定程度上确实减缓了梯度消失和爆炸的速度。</p>
+<h3 id="toc_6">理解指数平均加权</h3>
 
-<p>当激活函数使用 Relu 时，<code>Var(wi)=2/n</code>；当激活函数使用 tanh 时，<code>Var(wi)=1/n</code>。</p>
+<p>当 β 为 0.9 时，</p>
 
-<h2 id="toc_23">梯度检验（Gradient checking）</h2>
+<p>$$v_{100} = 0.9v_{99} + 0.1\theta_{100}$$
+$$v_{99} = 0.9v_{98} + 0.1\theta_{99}$$
+$$v_{98} = 0.9v_{97} + 0.1\theta_{98}$$
+$$...$$</p>
 
-<h3 id="toc_24">梯度的数值逼近</h3>
+<p>展开：</p>
 
-<p>使用双边误差的方法去逼近导数，精度要高于单边误差。</p>
+<p>$$v_{100} = 0.1\theta_{100} + 0.1 * 0.9\theta_{99} + 0.1 * {(0.9)}^2\theta_{98} + ...$$</p>
+
+<p>其中 θi 指第 i 天的实际数据。所有 θ 前面的系数（不包括 0.1）相加起来为 1 或者接近于 1，这些系数被称作<strong>偏差修正（Bias Correction）</strong>。</p>
+
+<p>根据函数极限的一条定理：</p>
+
+<p>$${\lim_{\beta\to 0}}(1 - \beta)^{\frac{1}{\beta}} = \frac{1}{e} \approx 0.368$$</p>
+
+<p>当 β 为 0.9 时，可以当作把过去 10 天的气温指数加权平均作为当日的气温，因为 10 天后权重已经下降到了当天的 1/3 左右。同理，当 β 为 0.98 时，可以把过去 50 天的气温指数加权平均作为当日的气温。</p>
+
+<p>因此，在计算当前时刻的平均值时，只需要前一天的平均值和当前时刻的值。</p>
+
+<p>$$v_t = \beta v_{t-1} + (1 - \beta)\theta_t$$</p>
+
+<p>考虑到代码，只需要不断更新 v 即可：</p>
+
+<p>$$v := \beta v + (1 - \beta)\theta_t$$
+<!--此处应有公式的实现代码--></p>
+
+<p>指数平均加权并<strong>不是最精准</strong>的计算平均数的方法，你可以直接计算过去 10 天或 50 天的平均值来得到更好的估计，但缺点是保存数据需要占用更多内存，执行更加复杂，计算成本更加高昂。</p>
+
+<p>指数加权平均数公式的好处之一在于它只需要一行代码，且占用极少内存，因此<strong>效率极高，且节省成本</strong>。</p>
+
+<h3 id="toc_7">指数平均加权的偏差修正</h3>
+
+<p>我们通常有</p>
+
+<p>$$v_0 = 0$$
+$$v_1 = 0.98v_0 + 0.02\theta_1$$</p>
+
+<p>因此，v_1 仅为第一个数据的 0.02（或者说 1-β），显然不准确。往后递推同理。</p>
+
+<p>因此，我们修改公式为</p>
+
+<p>$$\frac{v_t}{1-\beta^t} = \beta v_{t-1} + (1 - \beta)\theta_t$$</p>
+
+<p>随着 t 的增大，β 的 t 次方趋近于 0。因此当 t 很大的时候，偏差修正几乎没有作用，但是在前期学习可以帮助更好的预测数据。在实际过程中，一般会忽略前期偏差的影响。</p>
+
+<h2 id="toc_8">动量梯度下降法</h2>
+
+<p><strong>动量梯度下降（Gradient Descent with Momentum）</strong>是计算梯度的指数加权平均数，并利用该值来更新参数值。具体过程为：</p>
+
+<p>$$v_{dw} = \beta v_{dw} + (1 - \beta)dw$$
+$$v_{db} = \beta v_{db} + (1 - \beta)db$$
+$$w := w - \alpha v_{dw}$$
+$$b := b - \alpha v_{db}$$</p>
+
+<p>其中，将动量衰减参数 β 设置为 0.9 是超参数的一个常见且效果不错的选择。</p>
+
+<p><img src="Gradient-Descent-with-Momentum.png" alt="Gradient-Descent-with-Momentum"></p>
+
+<p>进行一般的梯度下降将会得到图中的蓝色曲线，由于存在上下波动，减缓了梯度下降的速度，因此只能使用一个较小的学习率进行迭代。如果用较大的学习率，结果可能会像紫色曲线一样偏离函数的范围。</p>
+
+<p>而使用动量梯度下降时，通过累加减少了抵达最小值路径上的波动，加速了收敛，因此在横轴方向下降得更快，从而得到图中红色的曲线。</p>
+
+<p>当前后梯度方向一致时，动量梯度下降能够加速学习；而前后梯度方向不一致时，动量梯度下降能够抑制震荡。</p>
+
+<p>另外，在 10 次迭代之后，移动平均已经不再是一个具有偏差的预测。因此实际在使用梯度下降法或者动量梯度下降法时，不会同时进行偏差修正。</p>
+
+<h3 id="toc_9">动量梯度下降法的形象解释</h3>
+
+<p>将成本函数想象为一个碗状，从顶部开始运动的小球向下滚，其中 dw，db 想象成球的加速度；而 v<em>dw，v</em>db 相当于速度。</p>
+
+<p>小球在向下滚动的过程中，因为加速度的存在速度会变快，但是由于 β 的存在，其值小于 1，可以认为是摩擦力，所以球不会无限加速下去。</p>
+
+<h2 id="toc_10">RMSprop 算法</h2>
+
+<p><strong>RMSProp（Root Mean Square Prop，均方根支）</strong>算法是在对梯度进行指数加权平均的基础上，引入平方和平方根。具体过程为：</p>
+
+<p>$$s_{dw} = \beta s_{dw} + (1 - \beta)(dw)^2$$
+$$s_{db} = \beta s_{db} + (1 - \beta)(db)^2$$
+$$w := w - \alpha \frac{dw}{\sqrt{s_{dw} + \epsilon}}$$
+$$b := b - \alpha \frac{db}{\sqrt{s_{db} + \epsilon}}$$</p>
+
+<p>其中，ϵ 是一个实际操作时加上的较小数（例如10^-8），为了防止分母太小而导致的数值不稳定。</p>
+
+<p>当 dw 或 db 较大时，<code>(dw)^2</code>、<code>(db)^2</code>会较大，进而<code>s_dw</code>、<code>s_db</code>也会较大，最终使得</p>
+
+<p>$$\frac{dw}{\sqrt{s_{dw} + \epsilon}}$$</p>
+
+<p>和</p>
+
+<p>$$\frac{db}{\sqrt{s_{db} + \epsilon}}$$</p>
+
+<p>较小，从而减小某些维度梯度更新波动较大的情况，使下降速度变得更快。</p>
+
+<p><img src="RMSProp.png" alt="RMSProp"></p>
+
+<p>RMSProp 有助于减少抵达最小值路径上的摆动，并允许使用一个更大的学习率 α，从而加快算法学习速度。并且，它和 Adam 优化算法已被证明适用于不同的深度学习网络结构。</p>
+
+<p>注意，β 也是一个超参数。</p>
+
+<h2 id="toc_11">Adam 优化算法</h2>
+
+<p><strong>Adam 优化算法（Adaptive Moment Estimation，自适应矩估计）</strong>基本上就是将 Momentum 和 RMSprop 算法结合在一起。具体过程如下：</p>
+
+<p>首先进行初始化：</p>
+
+<p>$$V_{dW} = 0, S_{dW} = 0, V_{db} = 0, S_{db} = 0$$</p>
+
+<p>用每一个 mini-batch 计算 dW、db，第 t 次迭代时：</p>
+
+<p>$$V_{dW} = \beta_1 V_{dW} + (1 - \beta_1) dW$$
+$$V_{db} = \beta_1 V_{db} + (1 - \beta_1) db$$
+$$S_{dW} = \beta_2 S_{dW} + (1 - \beta_2) {(dW)}^2$$
+$$S_{db} = \beta_2 S_{db} + (1 - \beta_2) {(db)}^2$$</p>
+
+<p>一般使用 Adam 算法时需要计算偏差修正：</p>
+
+<p>$$V^{corrected}_{dW} = \frac{V_{dW}}{1-{\beta_1}^t}$$
+$$V^{corrected}_{db} = \frac{V_{db}}{1-{\beta_1}^t}$$
+$$S^{corrected}_{dW} = \frac{S_{dW}}{1-{\beta_2}^t}$$
+$$S^{corrected}_{db} = \frac{S_{db}}{1-{\beta_2}^t}$$</p>
+
+<p>所以，更新 W、b 时有：</p>
+
+<p>$$W := W - \alpha \frac{V^{corrected}_{dW}}{{\sqrt{S^{corrected}_{dW}} + \epsilon}}$$</p>
+
+<p>$$b := b - \alpha \frac{V^{corrected}_{db}}{{\sqrt{S^{corrected}_{db}} + \epsilon}}$$</p>
+
+<p>（可以看到 Andrew 在这里 ϵ 没有写到平方根里去，和他在 RMSprop 中写的不太一样。基于 ϵ 的作用，我感觉问题不大）</p>
+
+<h3 id="toc_12">超参数的选择</h3>
+
+<p>Adam 优化算法有很多的超参数，其中</p>
 
 <ul>
-<li>单边误差：</li>
+<li>学习率 α：需要尝试一系列的值，来寻找比较合适的；</li>
+<li>β1：常用的缺省值为 0.9；</li>
+<li>β2：Adam 算法的作者建议为 0.999；</li>
+<li>ϵ：不重要，不会影响算法表现，Adam 算法的作者建议为 10^(-8)；</li>
 </ul>
 
-<p><img src="one-sided-difference.png" alt="one-sided-difference"></p>
+<p>β1、β2、ϵ 通常不需要调试。</p>
 
-<p>$$f&#39;(\theta) = {\lim_{\varepsilon\to 0}} = \frac{f(\theta + \varepsilon) - (\theta)}{\varepsilon}$$</p>
+<h2 id="toc_13">学习率衰减</h2>
 
-<p>误差：</p>
+<p>如果设置一个固定的学习率 α，在最小值点附近，由于不同的 batch 中存在一定的噪声，因此不会精确收敛，而是始终在最小值周围一个较大的范围内波动。</p>
 
-<p>$$O(\varepsilon)$$</p>
+<p>而如果随着时间慢慢减少学习率 α 的大小，在初期 α 较大时，下降的步长较大，能以较快的速度进行梯度下降；而后期逐步减小 α 的值，即减小步长，有助于算法的收敛，更容易接近最优解。</p>
+
+<p>最常用的学习率衰减方法：</p>
+
+<p>$$\alpha = \frac{1}{1 + decay\_rate * epoch\_num} * \alpha_0$$</p>
+
+<p>其中，<code>decay_rate</code>为衰减率（超参数），<code>epoch_num</code>为将所有的训练样本完整过一遍的次数。</p>
 
 <ul>
-<li>双边误差求导（即导数的定义）：</li>
+<li>指数衰减：</li>
 </ul>
 
-<p><img src="two-sided-difference.png" alt="two-sided-difference"></p>
-
-<p>$$f&#39;(\theta) = {\lim_{\varepsilon\to 0}} = \frac{f(\theta + \varepsilon) - (\theta - \varepsilon)}{2\varepsilon}$$</p>
-
-<p>误差：</p>
-
-<p>$$O(\varepsilon^2)$$</p>
-
-<p>当 ε 越小时，结果越接近真实的导数，也就是梯度值。可以使用这种方法来判断反向传播进行梯度下降时，是否出现了错误。</p>
-
-<h3 id="toc_25">梯度检验的实施</h3>
-
-<h4 id="toc_26">连接参数</h4>
-
-<p>将<code>W^[1]</code>，<code>b^[1]</code>，...，<code>W^[L]</code>，<code>b^[L]</code>全部连接出来，成为一个巨型向量 θ。这样，</p>
-
-<p>$$J(W^{[1]}, b^{[1]}, ..., W^{[L]}，b^{[L]}) = J(\theta)$$</p>
-
-<p>同时，对<code>dW^[1]</code>，<code>db^[1]</code>，...，<code>dW^[L]</code>，<code>db^[L]</code>执行同样的操作得到巨型向量 dθ，它和 θ 有同样的维度。</p>
-
-<p>现在，我们需要找到 dθ 和代价函数 J 的梯度的关系。</p>
-
-<h4 id="toc_27">进行梯度检验</h4>
-
-<p>如图，求得一个梯度逼近值</p>
-
-<p>$$d\theta_{approx}[i] ＝ \frac{J(\theta_1, \theta_2, ..., \theta_i+\varepsilon, ...) - J(\theta_1, \theta_2, ..., \theta_i-\varepsilon, ...)}{2\varepsilon}$$</p>
-
-<p>应该</p>
-
-<p>$$\approx{d\theta[i]} = \frac{\partial J}{\partial \theta_i}$$</p>
-
-<p>因此，我们用梯度检验值</p>
-
-<p>$$\frac{{||d\theta_{approx} - d\theta||}_2}{{||d\theta_{approx}||}_2+{||d\theta||}_2}$$</p>
-
-<p>检验反向传播的实施是否正确。其中，</p>
-
-<p>$${||x||}_2 = \sum^N_{i=1}{|x_i|}^2$$</p>
-
-<p>表示向量 x 的 2-范数（也称“欧几里德范数”）。</p>
-
-<p>如果梯度检验值和 ε 的值相近，说明神经网络的实施是正确的，否则要去检查代码是否存在 bug。</p>
-
-<h3 id="toc_28">在神经网络实施梯度检验的实用技巧和注意事项</h3>
-
-<ol>
-<li>不要在训练中使用梯度检验，它只用于调试（debug）。使用完毕关闭梯度检验的功能；</li>
-<li>如果算法的梯度检验失败，要检查所有项，并试着找出 bug，即确定哪个 dθapprox[i] 与 dθ 的值相差比较大；</li>
-<li>当成本函数包含正则项时，也需要带上正则项进行检验；</li>
-<li>梯度检验不能与 dropout 同时使用。因为每次迭代过程中，dropout 会随机消除隐藏层单元的不同子集，难以计算 dropout 在梯度下降上的成本函数 J。建议关闭 dropout，用梯度检验进行双重检查，确定在没有 dropout 的情况下算法正确，然后打开 dropout；</li>
-</ol>
-
-<h3 id="toc_29">参考资料</h3>
+<p>$$\alpha = 0.95^{epoch\_num} * \alpha_0$$</p>
 
 <ul>
-<li><a href="http://blog.csdn.net/koala_tree/article/details/78125697">吴恩达Coursera深度学习课程 DeepLearning.ai 提炼笔记（2-1）-- 深度学习的实践方面</a> </li>
-<li><a href="http://binweber.top/2017/09/28/deep_learning_3/">深度学习(3)：优化神经网络(1)</a></li>
+<li>其他：</li>
 </ul>
 
-<p><span style="float: left;">上一节 <a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Neural_Networks_and_Deep_Learning/Deep_neural_networks">深层神经网络</a></span></p>
+<p>$$\alpha = \frac{k}{\sqrt{epoch\_num}} * \alpha_0$$</p>
 
-<p><span style="float: right;">下一节 <a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Optimization_algorithms">优化算法</a></span></p>
+<ul>
+<li>离散下降</li>
+</ul>
 
-<p align="center" style="margin-top: 50px">
+<p>对于较小的模型，也有人会在训练时根据进度手动调小学习率。</p>
+
+<h2 id="toc_14">局部最优问题</h2>
+
+<p><img src="saddle.png" alt="saddle"></p>
+
+<p>当我们建立一个神经网络时，通常梯度为零的点是上图所示的<strong>鞍点（saddle）</strong>，而非局部最小值。因为在一个具有高维度空间的成本函数中，如果梯度为 0，那么在每个方向，成本函数或是凸函数，或是凹函数。而所有维度均需要是凹函数的概率极小，因此在低维度的局部最优点的情况并不适用于高维度。</p>
+
+<p>结论：</p>
+
+<ul>
+<li>在训练较大的神经网络、存在大量参数，并且成本函数被定义在较高的维度空间时，困在极差的局部最优中是不大可能的；</li>
+<li>鞍点附近的平稳段会使得学习非常缓慢，而这也是动量梯度下降法、RMSProp 以及 Adam 优化算法能够加速学习的原因，它们能帮助尽早走出平稳段。</li>
+</ul>
+
+<h3 id="toc_15">参考资料</h3>
+
+<ul>
+<li><a href="http://blog.csdn.net/koala_tree/article/details/78199611">吴恩达Coursera深度学习课程 DeepLearning.ai 提炼笔记（2-2）-- 优化算法</a> </li>
+<li><a href="http://binweber.top/2017/10/06/deep_learning_4/">深度学习(4)：优化神经网络(2) | Weber</a></li>
+</ul>
+
+<p><span style="float: left;">上一节 <a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Practical_aspects_of_Deep_Learning">深度学习的实用层面</a></span></p>
+
+<p><span style="float: right;">下一节 <a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/Improving_Deep_Neural_Networks/Hyperparameter_tuning_Batch_Normalization_and_Programming_Frameworks">超参数调试、Batch 正则化和程序框架</a></span></p>
+
+<p align="center" style="margin-top: 60px">
 @Kyon Huang <a href="http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/">首页</a> | <a href="https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes">Github</a>
 </p>
 
@@ -860,10 +811,6 @@ al /= keep_prob</code></pre></div>
 
 <script type="text/javascript">
 var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(){var e=/\blang(?:uage)?-(\w+)\b/i,t=0,n=_self.Prism={util:{encode:function(e){return e instanceof a?new a(e.type,n.util.encode(e.content),e.alias):"Array"===n.util.type(e)?e.map(n.util.encode):e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++t}),e.__id},clone:function(e){var t=n.util.type(e);switch(t){case"Object":var a={};for(var r in e)e.hasOwnProperty(r)&&(a[r]=n.util.clone(e[r]));return a;case"Array":return e.map&&e.map(function(e){return n.util.clone(e)})}return e}},languages:{extend:function(e,t){var a=n.util.clone(n.languages[e]);for(var r in t)a[r]=t[r];return a},insertBefore:function(e,t,a,r){r=r||n.languages;var l=r[e];if(2==arguments.length){a=arguments[1];for(var i in a)a.hasOwnProperty(i)&&(l[i]=a[i]);return l}var o={};for(var s in l)if(l.hasOwnProperty(s)){if(s==t)for(var i in a)a.hasOwnProperty(i)&&(o[i]=a[i]);o[s]=l[s]}return n.languages.DFS(n.languages,function(t,n){n===r[e]&&t!=e&&(this[t]=o)}),r[e]=o},DFS:function(e,t,a,r){r=r||{};for(var l in e)e.hasOwnProperty(l)&&(t.call(e,l,e[l],a||l),"Object"!==n.util.type(e[l])||r[n.util.objId(e[l])]?"Array"!==n.util.type(e[l])||r[n.util.objId(e[l])]||(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,l,r)):(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,null,r)))}},plugins:{},highlightAll:function(e,t){var a={callback:t,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};n.hooks.run("before-highlightall",a);for(var r,l=a.elements||document.querySelectorAll(a.selector),i=0;r=l[i++];)n.highlightElement(r,e===!0,a.callback)},highlightElement:function(t,a,r){for(var l,i,o=t;o&&!e.test(o.className);)o=o.parentNode;o&&(l=(o.className.match(e)||[,""])[1],i=n.languages[l]),t.className=t.className.replace(e,"").replace(/\s+/g," ")+" language-"+l,o=t.parentNode,/pre/i.test(o.nodeName)&&(o.className=o.className.replace(e,"").replace(/\s+/g," ")+" language-"+l);var s=t.textContent,u={element:t,language:l,grammar:i,code:s};if(!s||!i)return n.hooks.run("complete",u),void 0;if(n.hooks.run("before-highlight",u),a&&_self.Worker){var c=new Worker(n.filename);c.onmessage=function(e){u.highlightedCode=e.data,n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(u.element),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},c.postMessage(JSON.stringify({language:u.language,code:u.code,immediateClose:!0}))}else u.highlightedCode=n.highlight(u.code,u.grammar,u.language),n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(t),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},highlight:function(e,t,r){var l=n.tokenize(e,t);return a.stringify(n.util.encode(l),r)},tokenize:function(e,t){var a=n.Token,r=[e],l=t.rest;if(l){for(var i in l)t[i]=l[i];delete t.rest}e:for(var i in t)if(t.hasOwnProperty(i)&&t[i]){var o=t[i];o="Array"===n.util.type(o)?o:[o];for(var s=0;s<o.length;++s){var u=o[s],c=u.inside,g=!!u.lookbehind,h=!!u.greedy,f=0,d=u.alias;u=u.pattern||u;for(var p=0;p<r.length;p++){var m=r[p];if(r.length>e.length)break e;if(!(m instanceof a)){u.lastIndex=0;var y=u.exec(m),v=1;if(!y&&h&&p!=r.length-1){var b=r[p+1].matchedStr||r[p+1],k=m+b;if(p<r.length-2&&(k+=r[p+2].matchedStr||r[p+2]),u.lastIndex=0,y=u.exec(k),!y)continue;var w=y.index+(g?y[1].length:0);if(w>=m.length)continue;var _=y.index+y[0].length,P=m.length+b.length;if(v=3,P>=_){if(r[p+1].greedy)continue;v=2,k=k.slice(0,P)}m=k}if(y){g&&(f=y[1].length);var w=y.index+f,y=y[0].slice(f),_=w+y.length,S=m.slice(0,w),O=m.slice(_),j=[p,v];S&&j.push(S);var A=new a(i,c?n.tokenize(y,c):y,d,y,h);j.push(A),O&&j.push(O),Array.prototype.splice.apply(r,j)}}}}}return r},hooks:{all:{},add:function(e,t){var a=n.hooks.all;a[e]=a[e]||[],a[e].push(t)},run:function(e,t){var a=n.hooks.all[e];if(a&&a.length)for(var r,l=0;r=a[l++];)r(t)}}},a=n.Token=function(e,t,n,a,r){this.type=e,this.content=t,this.alias=n,this.matchedStr=a||null,this.greedy=!!r};if(a.stringify=function(e,t,r){if("string"==typeof e)return e;if("Array"===n.util.type(e))return e.map(function(n){return a.stringify(n,t,e)}).join("");var l={type:e.type,content:a.stringify(e.content,t,r),tag:"span",classes:["token",e.type],attributes:{},language:t,parent:r};if("comment"==l.type&&(l.attributes.spellcheck="true"),e.alias){var i="Array"===n.util.type(e.alias)?e.alias:[e.alias];Array.prototype.push.apply(l.classes,i)}n.hooks.run("wrap",l);var o="";for(var s in l.attributes)o+=(o?" ":"")+s+'="'+(l.attributes[s]||"")+'"';return"<"+l.tag+' class="'+l.classes.join(" ")+'" '+o+">"+l.content+"</"+l.tag+">"},!_self.document)return _self.addEventListener?(_self.addEventListener("message",function(e){var t=JSON.parse(e.data),a=t.language,r=t.code,l=t.immediateClose;_self.postMessage(n.highlight(r,n.languages[a],a)),l&&_self.close()},!1),_self.Prism):_self.Prism;var r=document.currentScript||[].slice.call(document.getElementsByTagName("script")).pop();return r&&(n.filename=r.src,document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",n.highlightAll)),_self.Prism}();"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism);
-</script>
-
-<script type="text/javascript">
-Prism.languages.python={"triple-quoted-string":{pattern:/"""[\s\S]+?"""|'''[\s\S]+?'''/,alias:"string"},comment:{pattern:/(^|[^\\])#.*/,lookbehind:!0},string:/("|')(?:\\?.)*?\1/,"function":{pattern:/((?:^|\s)def[ \t]+)[a-zA-Z_][a-zA-Z0-9_]*(?=\()/g,lookbehind:!0},"class-name":{pattern:/(\bclass\s+)[a-z0-9_]+/i,lookbehind:!0},keyword:/\b(?:as|assert|async|await|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|pass|print|raise|return|try|while|with|yield)\b/,"boolean":/\b(?:True|False)\b/,number:/\b-?(?:0[bo])?(?:(?:\d|0x[\da-f])[\da-f]*\.?\d*|\.\d+)(?:e[+-]?\d+)?j?\b/i,operator:/[-+%=]=?|!=|\*\*?=?|\/\/?=?|<[<=>]?|>[=>]?|[&|^~]|\b(?:or|and|not)\b/,punctuation:/[{}[\];(),.:]/};
 </script>
 
 <script type="text/javascript">
