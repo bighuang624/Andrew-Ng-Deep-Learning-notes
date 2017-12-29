@@ -21,11 +21,11 @@
 
 ## 代码
 
-各课练习代码请在相应文件夹下查找。
+各课练习代码（已完成）请在相应文件夹下查找。你可以通过在 github 上搜索 deeplearning.ai 找到很多含有未完成的练习代码的库。
 
 ## 课程地址
 
-[神经网络和深度学习 - 网易云课堂](https://mooc.study.163.com/course/2001281002#/info)
+[deeplearning.ai - 主页 - 网易云课堂](https://study.163.com/provider/2001053000/index.htm)
 
 ## LICENSE
 
