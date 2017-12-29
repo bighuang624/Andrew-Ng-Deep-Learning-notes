@@ -571,7 +571,28 @@ pre.line-numbers > code {
 
 <p>mini-batch 的大小也是一个重要的超变量，需要根据经验快速尝试，找到能够最有效地减少成本函数的值。</p>
 
-<h3 id="toc_4">符号表示</h3>
+<h3 id="toc_4">获得 mini-batch 的步骤</h3>
+
+<ol>
+<li>将数据集打乱；</li>
+<li>按照既定的大小分割数据集；</li>
+</ol>
+
+<p>其中打乱数据集的代码：</p>
+
+<div><pre class="line-numbers"><code class="language-python">m = X.shape[1] 
+permutation = list(np.random.permutation(m))
+shuffled_X = X[:, permutation]
+shuffled_Y = Y[:, permutation].reshape((1,m))</code></pre></div>
+
+<p><code>np.random.permutation</code>与<code>np.random.shuffle</code>有两处不同：</p>
+
+<ol>
+<li>如果传给<code>permutation</code>一个矩阵，它会返回一个洗牌后的矩阵副本；而<code>shuffle</code>只是对一个矩阵进行洗牌，没有返回值。</li>
+<li>如果传入一个整数，它会返回一个洗牌后的<code>arange</code>。</li>
+</ol>
+
+<h3 id="toc_5">符号表示</h3>
 
 <ul>
 <li>使用上角小括号 i 表示训练集里的值，x^(i) 是第 i 个训练样本；</li>
@@ -579,19 +600,19 @@ pre.line-numbers > code {
 <li>现在引入大括号 t 来代表不同的 mini-batch，因此有 X^{t}、Y^{t}。</li>
 </ul>
 
-<h2 id="toc_5">指数平均加权</h2>
+<h2 id="toc_6">指数平均加权</h2>
 
 <p><strong>指数加权平均（Exponentially Weight Average）</strong>是一种常用的序列数据处理方式，计算公式为：</p>
 
 <p>$$
-S_t = 
+s_t = 
 \begin{cases} 
 Y_1, &amp;t = 1 \\ 
-\beta Y_t + (1-\beta)S_{t-1}, &amp;t &gt; 1 
+\beta Y_t + (1-\beta)s_{t-1}, &amp;t &gt; 1 
 \end{cases}
 $$</p>
 
-<p>其中 Yt 为 t 下的实际值，St 为 t 下加权平均后的值，β 为权重值。</p>
+<p>其中 Yt 为 t 下的实际值，st 为 t 下加权平均后的值，β 为权重值。</p>
 
 <p>指数加权平均数在统计学中被称为“指数加权移动平均值”。</p>
 
@@ -601,7 +622,7 @@ $$</p>
 
 <p>当取权重值 β=0.98 时，可以得到图中更为平滑的绿色曲线。而当取权重值 β=0.5 时，得到图中噪点更多的黄色曲线。<strong>β 越大相当于求取平均利用的天数越多</strong>，曲线自然就会越平滑而且越滞后。</p>
 
-<h3 id="toc_6">理解指数平均加权</h3>
+<h3 id="toc_7">理解指数平均加权</h3>
 
 <p>当 β 为 0.9 时，</p>
 
@@ -635,7 +656,7 @@ $$...$$</p>
 
 <p>指数加权平均数公式的好处之一在于它只需要一行代码，且占用极少内存，因此<strong>效率极高，且节省成本</strong>。</p>
 
-<h3 id="toc_7">指数平均加权的偏差修正</h3>
+<h3 id="toc_8">指数平均加权的偏差修正</h3>
 
 <p>我们通常有</p>
 
@@ -650,36 +671,38 @@ $$v_1 = 0.98v_0 + 0.02\theta_1$$</p>
 
 <p>随着 t 的增大，β 的 t 次方趋近于 0。因此当 t 很大的时候，偏差修正几乎没有作用，但是在前期学习可以帮助更好的预测数据。在实际过程中，一般会忽略前期偏差的影响。</p>
 
-<h2 id="toc_8">动量梯度下降法</h2>
+<h2 id="toc_9">动量梯度下降法</h2>
 
 <p><strong>动量梯度下降（Gradient Descent with Momentum）</strong>是计算梯度的指数加权平均数，并利用该值来更新参数值。具体过程为：</p>
 
-<p>$$v_{dw} = \beta v_{dw} + (1 - \beta)dw$$
-$$v_{db} = \beta v_{db} + (1 - \beta)db$$
-$$w := w - \alpha v_{dw}$$
-$$b := b - \alpha v_{db}$$</p>
+<p>for l = 1, .. , L：</p>
 
-<p>其中，将动量衰减参数 β 设置为 0.9 是超参数的一个常见且效果不错的选择。</p>
+<p>$$v_{dW^{[l]}} = \beta v_{dW^{[l]}} + (1 - \beta) dW^{[l]}$$
+$$v_{db^{[l]}} = \beta v_{db^{[l]}} + (1 - \beta) db^{[l]}$$
+$$W^{[l]} := W^{[l]} - \alpha v_{dW^{[l]}}$$
+$$b^{[l]} := b^{[l]} - \alpha v_{db^{[l]}}$$</p>
+
+<p>其中，将动量衰减参数 β 设置为 0.9 是超参数的一个常见且效果不错的选择。当 β 被设置为 0 时，显然就成了 batch 梯度下降法。</p>
 
 <p><img src="Gradient-Descent-with-Momentum.png" alt="Gradient-Descent-with-Momentum"></p>
 
 <p>进行一般的梯度下降将会得到图中的蓝色曲线，由于存在上下波动，减缓了梯度下降的速度，因此只能使用一个较小的学习率进行迭代。如果用较大的学习率，结果可能会像紫色曲线一样偏离函数的范围。</p>
 
-<p>而使用动量梯度下降时，通过累加减少了抵达最小值路径上的波动，加速了收敛，因此在横轴方向下降得更快，从而得到图中红色的曲线。</p>
+<p>而使用动量梯度下降时，通过累加过去的梯度值来减少抵达最小值路径上的波动，加速了收敛，因此在横轴方向下降得更快，从而得到图中红色的曲线。</p>
 
 <p>当前后梯度方向一致时，动量梯度下降能够加速学习；而前后梯度方向不一致时，动量梯度下降能够抑制震荡。</p>
 
 <p>另外，在 10 次迭代之后，移动平均已经不再是一个具有偏差的预测。因此实际在使用梯度下降法或者动量梯度下降法时，不会同时进行偏差修正。</p>
 
-<h3 id="toc_9">动量梯度下降法的形象解释</h3>
+<h3 id="toc_10">动量梯度下降法的形象解释</h3>
 
 <p>将成本函数想象为一个碗状，从顶部开始运动的小球向下滚，其中 dw，db 想象成球的加速度；而 v<em>dw，v</em>db 相当于速度。</p>
 
 <p>小球在向下滚动的过程中，因为加速度的存在速度会变快，但是由于 β 的存在，其值小于 1，可以认为是摩擦力，所以球不会无限加速下去。</p>
 
-<h2 id="toc_10">RMSprop 算法</h2>
+<h2 id="toc_11">RMSProp 算法</h2>
 
-<p><strong>RMSProp（Root Mean Square Prop，均方根支）</strong>算法是在对梯度进行指数加权平均的基础上，引入平方和平方根。具体过程为：</p>
+<p><strong>RMSProp（Root Mean Square Prop，均方根支）</strong>算法是在对梯度进行指数加权平均的基础上，引入平方和平方根。具体过程为（省略了 l）：</p>
 
 <p>$$s_{dw} = \beta s_{dw} + (1 - \beta)(dw)^2$$
 $$s_{db} = \beta s_{db} + (1 - \beta)(db)^2$$
@@ -704,37 +727,37 @@ $$b := b - \alpha \frac{db}{\sqrt{s_{db} + \epsilon}}$$</p>
 
 <p>注意，β 也是一个超参数。</p>
 
-<h2 id="toc_11">Adam 优化算法</h2>
+<h2 id="toc_12">Adam 优化算法</h2>
 
-<p><strong>Adam 优化算法（Adaptive Moment Estimation，自适应矩估计）</strong>基本上就是将 Momentum 和 RMSprop 算法结合在一起。具体过程如下：</p>
+<p><strong>Adam 优化算法（Adaptive Moment Estimation，自适应矩估计）</strong>基本上就是将 Momentum 和 RMSProp 算法结合在一起，通常有超越二者单独时的效果。具体过程如下（省略了 l）：</p>
 
 <p>首先进行初始化：</p>
 
-<p>$$V_{dW} = 0, S_{dW} = 0, V_{db} = 0, S_{db} = 0$$</p>
+<p>$$v_{dW} = 0, s_{dW} = 0, v_{db} = 0, s_{db} = 0$$</p>
 
 <p>用每一个 mini-batch 计算 dW、db，第 t 次迭代时：</p>
 
-<p>$$V_{dW} = \beta_1 V_{dW} + (1 - \beta_1) dW$$
-$$V_{db} = \beta_1 V_{db} + (1 - \beta_1) db$$
-$$S_{dW} = \beta_2 S_{dW} + (1 - \beta_2) {(dW)}^2$$
-$$S_{db} = \beta_2 S_{db} + (1 - \beta_2) {(db)}^2$$</p>
+<p>$$v_{dW} = \beta_1 v_{dW} + (1 - \beta_1) dW$$
+$$v_{db} = \beta_1 v_{db} + (1 - \beta_1) db$$
+$$s_{dW} = \beta_2 s_{dW} + (1 - \beta_2) {(dW)}^2$$
+$$s_{db} = \beta_2 s_{db} + (1 - \beta_2) {(db)}^2$$</p>
 
 <p>一般使用 Adam 算法时需要计算偏差修正：</p>
 
-<p>$$V^{corrected}_{dW} = \frac{V_{dW}}{1-{\beta_1}^t}$$
-$$V^{corrected}_{db} = \frac{V_{db}}{1-{\beta_1}^t}$$
-$$S^{corrected}_{dW} = \frac{S_{dW}}{1-{\beta_2}^t}$$
-$$S^{corrected}_{db} = \frac{S_{db}}{1-{\beta_2}^t}$$</p>
+<p>$$v^{corrected}_{dW} = \frac{v_{dW}}{1-{\beta_1}^t}$$
+$$v^{corrected}_{db} = \frac{v_{db}}{1-{\beta_1}^t}$$
+$$s^{corrected}_{dW} = \frac{s_{dW}}{1-{\beta_2}^t}$$
+$$s^{corrected}_{db} = \frac{s_{db}}{1-{\beta_2}^t}$$</p>
 
 <p>所以，更新 W、b 时有：</p>
 
-<p>$$W := W - \alpha \frac{V^{corrected}_{dW}}{{\sqrt{S^{corrected}_{dW}} + \epsilon}}$$</p>
+<p>$$W := W - \alpha \frac{v^{corrected}_{dW}}{{\sqrt{s^{corrected}_{dW}} + \epsilon}}$$</p>
 
-<p>$$b := b - \alpha \frac{V^{corrected}_{db}}{{\sqrt{S^{corrected}_{db}} + \epsilon}}$$</p>
+<p>$$b := b - \alpha \frac{v^{corrected}_{db}}{{\sqrt{s^{corrected}_{db}} + \epsilon}}$$</p>
 
-<p>（可以看到 Andrew 在这里 ϵ 没有写到平方根里去，和他在 RMSprop 中写的不太一样。基于 ϵ 的作用，我感觉问题不大）</p>
+<p>（可以看到 Andrew 在这里 ϵ 没有写到平方根里去，和他在 RMSProp 中写的不太一样。考虑到 ϵ 所起的作用，我感觉影响不大）</p>
 
-<h3 id="toc_12">超参数的选择</h3>
+<h3 id="toc_13">超参数的选择</h3>
 
 <p>Adam 优化算法有很多的超参数，其中</p>
 
@@ -747,7 +770,7 @@ $$S^{corrected}_{db} = \frac{S_{db}}{1-{\beta_2}^t}$$</p>
 
 <p>β1、β2、ϵ 通常不需要调试。</p>
 
-<h2 id="toc_13">学习率衰减</h2>
+<h2 id="toc_14">学习率衰减</h2>
 
 <p>如果设置一个固定的学习率 α，在最小值点附近，由于不同的 batch 中存在一定的噪声，因此不会精确收敛，而是始终在最小值周围一个较大的范围内波动。</p>
 
@@ -777,7 +800,7 @@ $$S^{corrected}_{db} = \frac{S_{db}}{1-{\beta_2}^t}$$</p>
 
 <p>对于较小的模型，也有人会在训练时根据进度手动调小学习率。</p>
 
-<h2 id="toc_14">局部最优问题</h2>
+<h2 id="toc_15">局部最优问题</h2>
 
 <p><img src="saddle.png" alt="saddle"></p>
 
@@ -790,7 +813,7 @@ $$S^{corrected}_{db} = \frac{S_{db}}{1-{\beta_2}^t}$$</p>
 <li>鞍点附近的平稳段会使得学习非常缓慢，而这也是动量梯度下降法、RMSProp 以及 Adam 优化算法能够加速学习的原因，它们能帮助尽早走出平稳段。</li>
 </ul>
 
-<h3 id="toc_15">参考资料</h3>
+<h3 id="toc_16">参考资料</h3>
 
 <ul>
 <li><a href="http://blog.csdn.net/koala_tree/article/details/78199611">吴恩达Coursera深度学习课程 DeepLearning.ai 提炼笔记（2-2）-- 优化算法</a> </li>
@@ -811,6 +834,10 @@ $$S^{corrected}_{db} = \frac{S_{db}}{1-{\beta_2}^t}$$</p>
 
 <script type="text/javascript">
 var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(){var e=/\blang(?:uage)?-(\w+)\b/i,t=0,n=_self.Prism={util:{encode:function(e){return e instanceof a?new a(e.type,n.util.encode(e.content),e.alias):"Array"===n.util.type(e)?e.map(n.util.encode):e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++t}),e.__id},clone:function(e){var t=n.util.type(e);switch(t){case"Object":var a={};for(var r in e)e.hasOwnProperty(r)&&(a[r]=n.util.clone(e[r]));return a;case"Array":return e.map&&e.map(function(e){return n.util.clone(e)})}return e}},languages:{extend:function(e,t){var a=n.util.clone(n.languages[e]);for(var r in t)a[r]=t[r];return a},insertBefore:function(e,t,a,r){r=r||n.languages;var l=r[e];if(2==arguments.length){a=arguments[1];for(var i in a)a.hasOwnProperty(i)&&(l[i]=a[i]);return l}var o={};for(var s in l)if(l.hasOwnProperty(s)){if(s==t)for(var i in a)a.hasOwnProperty(i)&&(o[i]=a[i]);o[s]=l[s]}return n.languages.DFS(n.languages,function(t,n){n===r[e]&&t!=e&&(this[t]=o)}),r[e]=o},DFS:function(e,t,a,r){r=r||{};for(var l in e)e.hasOwnProperty(l)&&(t.call(e,l,e[l],a||l),"Object"!==n.util.type(e[l])||r[n.util.objId(e[l])]?"Array"!==n.util.type(e[l])||r[n.util.objId(e[l])]||(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,l,r)):(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,null,r)))}},plugins:{},highlightAll:function(e,t){var a={callback:t,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};n.hooks.run("before-highlightall",a);for(var r,l=a.elements||document.querySelectorAll(a.selector),i=0;r=l[i++];)n.highlightElement(r,e===!0,a.callback)},highlightElement:function(t,a,r){for(var l,i,o=t;o&&!e.test(o.className);)o=o.parentNode;o&&(l=(o.className.match(e)||[,""])[1],i=n.languages[l]),t.className=t.className.replace(e,"").replace(/\s+/g," ")+" language-"+l,o=t.parentNode,/pre/i.test(o.nodeName)&&(o.className=o.className.replace(e,"").replace(/\s+/g," ")+" language-"+l);var s=t.textContent,u={element:t,language:l,grammar:i,code:s};if(!s||!i)return n.hooks.run("complete",u),void 0;if(n.hooks.run("before-highlight",u),a&&_self.Worker){var c=new Worker(n.filename);c.onmessage=function(e){u.highlightedCode=e.data,n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(u.element),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},c.postMessage(JSON.stringify({language:u.language,code:u.code,immediateClose:!0}))}else u.highlightedCode=n.highlight(u.code,u.grammar,u.language),n.hooks.run("before-insert",u),u.element.innerHTML=u.highlightedCode,r&&r.call(t),n.hooks.run("after-highlight",u),n.hooks.run("complete",u)},highlight:function(e,t,r){var l=n.tokenize(e,t);return a.stringify(n.util.encode(l),r)},tokenize:function(e,t){var a=n.Token,r=[e],l=t.rest;if(l){for(var i in l)t[i]=l[i];delete t.rest}e:for(var i in t)if(t.hasOwnProperty(i)&&t[i]){var o=t[i];o="Array"===n.util.type(o)?o:[o];for(var s=0;s<o.length;++s){var u=o[s],c=u.inside,g=!!u.lookbehind,h=!!u.greedy,f=0,d=u.alias;u=u.pattern||u;for(var p=0;p<r.length;p++){var m=r[p];if(r.length>e.length)break e;if(!(m instanceof a)){u.lastIndex=0;var y=u.exec(m),v=1;if(!y&&h&&p!=r.length-1){var b=r[p+1].matchedStr||r[p+1],k=m+b;if(p<r.length-2&&(k+=r[p+2].matchedStr||r[p+2]),u.lastIndex=0,y=u.exec(k),!y)continue;var w=y.index+(g?y[1].length:0);if(w>=m.length)continue;var _=y.index+y[0].length,P=m.length+b.length;if(v=3,P>=_){if(r[p+1].greedy)continue;v=2,k=k.slice(0,P)}m=k}if(y){g&&(f=y[1].length);var w=y.index+f,y=y[0].slice(f),_=w+y.length,S=m.slice(0,w),O=m.slice(_),j=[p,v];S&&j.push(S);var A=new a(i,c?n.tokenize(y,c):y,d,y,h);j.push(A),O&&j.push(O),Array.prototype.splice.apply(r,j)}}}}}return r},hooks:{all:{},add:function(e,t){var a=n.hooks.all;a[e]=a[e]||[],a[e].push(t)},run:function(e,t){var a=n.hooks.all[e];if(a&&a.length)for(var r,l=0;r=a[l++];)r(t)}}},a=n.Token=function(e,t,n,a,r){this.type=e,this.content=t,this.alias=n,this.matchedStr=a||null,this.greedy=!!r};if(a.stringify=function(e,t,r){if("string"==typeof e)return e;if("Array"===n.util.type(e))return e.map(function(n){return a.stringify(n,t,e)}).join("");var l={type:e.type,content:a.stringify(e.content,t,r),tag:"span",classes:["token",e.type],attributes:{},language:t,parent:r};if("comment"==l.type&&(l.attributes.spellcheck="true"),e.alias){var i="Array"===n.util.type(e.alias)?e.alias:[e.alias];Array.prototype.push.apply(l.classes,i)}n.hooks.run("wrap",l);var o="";for(var s in l.attributes)o+=(o?" ":"")+s+'="'+(l.attributes[s]||"")+'"';return"<"+l.tag+' class="'+l.classes.join(" ")+'" '+o+">"+l.content+"</"+l.tag+">"},!_self.document)return _self.addEventListener?(_self.addEventListener("message",function(e){var t=JSON.parse(e.data),a=t.language,r=t.code,l=t.immediateClose;_self.postMessage(n.highlight(r,n.languages[a],a)),l&&_self.close()},!1),_self.Prism):_self.Prism;var r=document.currentScript||[].slice.call(document.getElementsByTagName("script")).pop();return r&&(n.filename=r.src,document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",n.highlightAll)),_self.Prism}();"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism);
+</script>
+
+<script type="text/javascript">
+Prism.languages.python={"triple-quoted-string":{pattern:/"""[\s\S]+?"""|'''[\s\S]+?'''/,alias:"string"},comment:{pattern:/(^|[^\\])#.*/,lookbehind:!0},string:/("|')(?:\\?.)*?\1/,"function":{pattern:/((?:^|\s)def[ \t]+)[a-zA-Z_][a-zA-Z0-9_]*(?=\()/g,lookbehind:!0},"class-name":{pattern:/(\bclass\s+)[a-z0-9_]+/i,lookbehind:!0},keyword:/\b(?:as|assert|async|await|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|pass|print|raise|return|try|while|with|yield)\b/,"boolean":/\b(?:True|False)\b/,number:/\b-?(?:0[bo])?(?:(?:\d|0x[\da-f])[\da-f]*\.?\d*|\.\d+)(?:e[+-]?\d+)?j?\b/i,operator:/[-+%=]=?|!=|\*\*?=?|\/\/?=?|<[<=>]?|>[=>]?|[&|^~]|\b(?:or|and|not)\b/,punctuation:/[{}[\];(),.:]/};
 </script>
 
 <script type="text/javascript">
