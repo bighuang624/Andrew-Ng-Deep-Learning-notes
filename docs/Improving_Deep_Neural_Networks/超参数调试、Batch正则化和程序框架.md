@@ -67,7 +67,7 @@ $$\tilde z^{(i)} = \gamma z^{(i)}\_{norm} + \beta$$
 
 对于 L 层神经网络，经过 Batch Normalization 的作用，整体流程如下：
 
-![BN](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/Improving_Deep_Neural_Networks/BN.png)
+![BN](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Improving_Deep_Neural_Networks/BN.png)
 
 实际上，Batch Normalization 经常使用在 mini-batch 上，这也是其名称的由来。
 
@@ -120,7 +120,7 @@ $$\sum^C\_{i=1}a^{[L]}\_i = 1$$
 
 一个直观的计算例子如下：
 
-![understanding-softmax](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/Improving_Deep_Neural_Networks/understanding-softmax.png)
+![understanding-softmax](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Improving_Deep_Neural_Networks/understanding-softmax.png)
 
 ### 损失函数和成本函数
 
