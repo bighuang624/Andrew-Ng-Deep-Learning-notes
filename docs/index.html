@@ -27,6 +27,12 @@
         function(hook, vm) {
           hook.doneEach(function(html, next) {
             MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            MathJax.Hub.Config({
+              tex2jax: {
+                inlineMath: [ ['$', '$'] ],
+                displayMath: [ ['$$', '$$']]
+              }
+            });
           })
         }
       ]

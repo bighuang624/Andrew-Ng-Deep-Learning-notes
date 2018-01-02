@@ -20,6 +20,17 @@
 
 [项目地址](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes)
 
+如果您觉得有帮助，不妨**点一个 star** 以资鼓励。
+
+## 参考资料
+
+整理笔记的过程中也参考了网上相同课程的很多笔记，比较连贯的系列就在这里推荐给大家。感谢他们的帮助！
+
+* [红色石头的机器学习之路](https://zhuanlan.zhihu.com/Redstone)
+* [机器学习爱好者](http://www.ai-start.com)
+* [机器学习之路](https://zhuanlan.zhihu.com/koalatree)
+* [Hugsy 的深度学习系列笔记](http://binweber.top/tags/ML/)
+
 ## LICENSE
 
 本项目所有文章采用 [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) 许可协议。转载请注明出处！ 
