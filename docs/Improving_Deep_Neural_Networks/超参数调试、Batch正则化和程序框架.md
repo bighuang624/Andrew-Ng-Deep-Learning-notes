@@ -173,6 +173,55 @@ $$dZ^{[L]} = A^{[L]} - Y$$
 * 运行速度：特别是训练大型数据集时；
 * 是否真正开放：不仅需要开源，而且需要良好的管理，能够持续开放所有功能。
 
+## Tensorflow
+
+目前最火的深度学习框架大概是 Tensorflow 了。这里简单的介绍一下。
+
+Tensorflow 框架内可以直接调用梯度下降算法，极大地降低了编程人员的工作量。例如以下代码：
+
+```py
+import numpy as np
+import tensorflow as tf
+
+cofficients = np.array([[1.],[-10.],[25.]])
+
+w = tf.Variable(0,dtype=tf.float32)
+x = tf.placeholder(tf.float32,[3,1])
+# Tensorflow 重载了加减乘除符号
+cost = x[0][0]*w**2 + x[1][0]*w + x[2][0]
+# 改变下面这行代码，可以换用更好的优化算法
+train = tf.train.GradientDescentOptimizer(0.01).minimize(cost)
+
+init = tf.global_variables_initializer()
+session = tf.Session()
+session.run(init)
+for i in range(1000):
+	session.run(train, feed_dict=(x:coefficients))
+print(session.run(w))
+```
+
+打印为 4.99999，基本可以认为是我们需要的结果。更改 cofficients 的值可以得到不同的结果 w。
+
+上述代码中：
+
+```py
+session = tf.Session()
+session.run(init)
+print(session.run(w))
+```
+
+也可以写作：
+
+```py
+with tf.Session() as session:
+	session.run(init)
+	print(session.run(w))
+```
+
+with 语句适用于对资源进行访问的场合，确保不管使用过程中是否发生异常都会执行必要的“清理”操作，释放资源，比如文件使用后自动关闭、线程中锁的自动获取和释放等。
+
+想了解更多 Tensorflow 有关知识，请参考[官方文档](https://www.tensorflow.org)。
+
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   tex2jax: {inlineMath: [ ['$', '$'] ],
