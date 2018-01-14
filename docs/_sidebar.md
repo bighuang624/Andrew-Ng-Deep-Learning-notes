@@ -8,7 +8,7 @@
   - [超参数调试、Batch 正则化和程序框架](Improving_Deep_Neural_Networks/超参数调试、Batch正则化和程序框架)
 - **结构化机器学习项目**
   - [机器学习（ML）策略（1）](Structuring_Machine_Learning_Projects/机器学习（ML）策略（1）)
-  - 机器学习（ML）策略（2）
+  - [机器学习（ML）策略（2）](Structuring_Machine_Learning_Projects/机器学习（ML）策略（2）)
 - **卷积神经网络**
   - 卷积神经网络
   - 深度卷积网络：实例探究
