@@ -79,7 +79,7 @@
 
 ![Tranfer-Learning](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Structuring_Machine_Learning_Projects/Tranfer-Learning.png)
 
-下述场合进行迁移学习是有意义的：
+在下述场合进行迁移学习是有意义的：
 
 1. 两个任务有同样的输入（比如都是图像或者都是音频）；
 2. **拥有更多数据的任务迁移到数据较少的任务**；
@@ -107,7 +107,7 @@ $$L(\hat y\_j^{(i)}, y\_j^{(i)}) = -y\_j^{(i)} log \hat y\_j^{(i)} - (1 -y\_j^{(
 
 多任务学习和 Softmax 回归看上去有些类似，容易混淆。它们的区别是，Softmax 回归的输出向量 y 中只有一个元素为 1；而多任务学习的输出向量 y 中可以有多个元素为 1。
 
-下述场合进行多任务学习是有意义的：
+在下述场合进行多任务学习是有意义的：
 
 1. 训练的一组任务可以供用低层次特征；
 2. *通常*，每个任务的数据量接近；
@@ -117,13 +117,13 @@ $$L(\hat y\_j^{(i)}, y\_j^{(i)}) = -y\_j^{(i)} log \hat y\_j^{(i)} - (1 -y\_j^{(
 
 ## 端到端学习
 
-传统的流水线方法是将系统分块的。每一个模块处理一种输入，然后其输出作为下一个模块的输入，构成一条流水线。而**端到端深度学习（End-to-end Deep Learning）**只用一个单一的神经网络模型来实现所有的功能。它将所有模块混合在一起，只关心输入和输出。
-
-![End-to-end-Deep-Learning](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Structuring_Machine_Learning_Projects/End-to-end-Deep-Learning.png)
+在传统的机器学习分块模型中，每一个模块处理一种输入，然后其输出作为下一个模块的输入，构成一条流水线。而**端到端深度学习（End-to-end Deep Learning）**只用一个单一的神经网络模型来实现所有的功能。它将所有模块混合在一起，只关心输入和输出。
 
 如果数据量较少，传统机器学习分块模型所构成的流水线效果会很不错。但如果训练样本足够大，并且训练出的神经网络模型足够复杂，那么端到端深度学习模型的性能会比传统机器学习分块模型更好。
 
-而如果数据集规模适中，还是可以使用流水线方法，但是可以通过神经网络绕过某些模块，直接输出某些特征。
+而如果数据集规模适中，还是可以使用流水线方法，但是可以混合端到端深度学习，通过神经网络绕过某些模块，直接输出某些特征。
+
+![End-to-end-Deep-Learning](https://raw.githubusercontent.com/bighuang624/Andrew-Ng-Deep-Learning-notes/master/docs/Structuring_Machine_Learning_Projects/End-to-end-Deep-Learning.png)
 
 ### 优点与缺点
 

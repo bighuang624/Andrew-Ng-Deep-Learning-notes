@@ -10,7 +10,7 @@
   - [机器学习（ML）策略（1）](Structuring_Machine_Learning_Projects/机器学习（ML）策略（1）)
   - [机器学习（ML）策略（2）](Structuring_Machine_Learning_Projects/机器学习（ML）策略（2）)
 - **卷积神经网络**
-  - 卷积神经网络
+  - [卷积神经网络](Convolutional_Neural_Networks/卷积神经网络)
   - 深度卷积网络：实例探究
   - 目标检测
   - 特殊应用：人脸识别和神经风格转换
