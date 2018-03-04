@@ -6,7 +6,7 @@
   - [深度学习的实用层面](Improving_Deep_Neural_Networks/深度学习的实用层面)
   - [优化算法](Improving_Deep_Neural_Networks/优化算法)
   - [超参数调试、Batch 正则化和程序框架](Improving_Deep_Neural_Networks/超参数调试、Batch正则化和程序框架)
-- **结构化机器学习项目**
+- **搭建机器学习项目**
   - [机器学习（ML）策略（1）](Structuring_Machine_Learning_Projects/机器学习（ML）策略（1）)
   - [机器学习（ML）策略（2）](Structuring_Machine_Learning_Projects/机器学习（ML）策略（2）)
 - **卷积神经网络**
