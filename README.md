@@ -2,6 +2,10 @@
 
 <p align="center"><a href="http://kyonhuang.top"><img src="https://img.shields.io/badge/%E4%BD%9C%E8%80%85-KyonHuang-7AD6FD.svg"></a></p>
 
+## 正在学习中
+
+目前网易云课堂版的字幕出现了问题，对我理解 CNN 相关内容加高了一些难度。于是根据遵循自己的兴趣，先跳到第 5 课继续学习。
+
 ## 笔记
 
 推荐阅览 html 版本的笔记，由 [docsify](https://docsify.js.org/#/zh-cn/) 动态生成文档网站。
