@@ -2,10 +2,6 @@
 
 <p align="center"><a href="http://kyonhuang.top"><img src="https://img.shields.io/badge/%E4%BD%9C%E8%80%85-KyonHuang-7AD6FD.svg"></a></p>
 
-## 正在学习中
-
-决定遵循自己的兴趣，先跳到第 5 课继续学习。
-
 ## 笔记
 
 推荐阅览 html 版本的笔记，由 [docsify](https://docsify.js.org/#/zh-cn/) 动态生成文档网站。
@@ -37,5 +33,5 @@
 
 ## LICENSE
 
-本项目所有文章采用 [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) 许可协议。转载请注明出处！ 
+本项目所有文章采用 [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) 许可协议，转载请注明出处。 
 

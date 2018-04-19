@@ -13,7 +13,7 @@
   - [卷积神经网络](Convolutional_Neural_Networks/卷积神经网络)
   - [深度卷积网络：实例探究](Convolutional_Neural_Networks/深度卷积网络：实例探究)
   - [目标检测](Convolutional_Neural_Networks/目标检测)
-  - 特殊应用：人脸识别和神经风格转换
+  - [特殊应用：人脸识别和神经风格转换](Convolutional_Neural_Networks/特殊应用：人脸识别和神经风格转换)
 - **序列模型**
   - [循环序列模型](Sequence_Models/循环序列模型)
   - [自然语言处理与词嵌入](Sequence_Models/自然语言处理与词嵌入)
