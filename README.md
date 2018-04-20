@@ -20,7 +20,8 @@
 
 [项目地址](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes)
 
-如果您觉得有帮助，不妨**点一个 star** 以资鼓励。
+* 本人也尚在学习中，水平有限。如果确认有误，**欢迎提出 issue 或者 pull request**。
+* 如果您觉得有帮助，不妨**点一个 star** 以资鼓励。
 
 ## 参考资料
 
