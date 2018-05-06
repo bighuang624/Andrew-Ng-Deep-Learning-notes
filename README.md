@@ -12,7 +12,7 @@
 
 本仓库暂时只包含本人已完成的各课练习代码，请在 [assignments 文件夹](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes/tree/master/assignments)下查找。你可以通过在 github 上搜索 deeplearning.ai 找到很多含有未完成的练习代码的库。
 
-另推荐一份[已完成的各课练习代码](https://github.com/Kulbear/deep-learning-coursera)。
+另推荐一份[已完成的各课练习代码](https://github.com/JudasDie/deeplearning.ai)。
 
 ## 课程地址
 
