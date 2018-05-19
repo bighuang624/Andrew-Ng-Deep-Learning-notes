@@ -132,12 +132,3 @@ $$F1 = \frac{2}{\frac{1}{P}+\frac{1}{R}} = \frac{2PR}{P+R}$$
 
 根据正交化的思想，我们有一些措施可以独立地优化二者之一。
 
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {inlineMath: [ ['$', '$'] ],
-        displayMath: [ ['$$', '$$']]}
-});
-</script>
-
-<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.4/MathJax.js?config=default"></script>

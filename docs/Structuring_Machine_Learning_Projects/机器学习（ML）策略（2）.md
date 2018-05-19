@@ -142,12 +142,3 @@ $$L(\hat y\_j^{(i)}, y\_j^{(i)}) = -y\_j^{(i)} log \hat y\_j^{(i)} - (1 -y\_j^{(
 * 排除了可能有用的人工设计组件；
 
 根据以上分析，决定一个问题是否应用端到端学习的**关键点**是：是否有足够的数据，支持能够直接学习从 x 映射到 y 并且足够复杂的函数？
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {inlineMath: [ ['$', '$'] ],
-        displayMath: [ ['$$', '$$']]}
-});
-</script>
-
-<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.4/MathJax.js?config=default"></script>

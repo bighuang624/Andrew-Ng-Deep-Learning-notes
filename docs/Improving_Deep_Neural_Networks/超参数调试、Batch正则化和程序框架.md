@@ -221,12 +221,3 @@ with tf.Session() as session:
 with 语句适用于对资源进行访问的场合，确保不管使用过程中是否发生异常都会执行必要的“清理”操作，释放资源，比如文件使用后自动关闭、线程中锁的自动获取和释放等。
 
 想了解更多 Tensorflow 有关知识，请参考[官方文档](https://www.tensorflow.org)。
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {inlineMath: [ ['$', '$'] ],
-        displayMath: [ ['$$', '$$']]}
-});
-</script>
-
-<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.4/MathJax.js?config=default"></script>
