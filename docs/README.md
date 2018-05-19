@@ -37,12 +37,3 @@
 ## LICENSE
 
 本项目所有文章采用 [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/) 许可协议，转载请注明出处。 
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  tex2jax: {inlineMath: [ ['$', '$'] ],
-        displayMath: [ ['$$', '$$']]}
-});
-</script>
-
-<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.4/MathJax.js?config=default"></script>
