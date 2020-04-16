@@ -4,13 +4,13 @@
 
 ## 笔记
 
-推荐阅览 html 版本的笔记，由 [docsify](https://docsify.js.org/#/zh-cn/) 动态生成文档网站。
+Github Markdown 对 LaTeX 的支持较差，推荐[在线阅览笔记](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/)。
 
-[在线阅览地址](http://kyonhuang.top/Andrew-Ng-Deep-Learning-notes/)
+本笔记 html 版本由 [docsify](https://docsify.js.org/#/zh-cn/) 动态生成文档网站。由于笔记中图片链接来自 Github，有时不太稳定，推荐科学上网后阅览笔记。
 
 ## 代码
 
-本仓库暂时只包含本人已完成的各课练习代码，请在 [assignments 文件夹](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes/tree/master/assignments)下查找。你可以通过在 github 上搜索 deeplearning.ai 找到很多含有未完成的练习代码的库。
+本仓库暂时只包含本人已完成的各课练习代码，请在 [assignments 文件夹](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes/tree/master/assignments)下查找，没有就是尚未完成。你可以通过在 github 上搜索 deeplearning.ai 找到很多含有未完成的练习代码的库。
 
 另推荐一份[已完成的各课练习代码](https://github.com/JudasDie/deeplearning.ai)。
 
@@ -18,10 +18,13 @@
 
 [deeplearning.ai - 主页 - 网易云课堂](https://study.163.com/provider/2001053000/index.htm)
 
-## Github
+## 本项目地址
 
 [项目地址](https://github.com/bighuang624/Andrew-Ng-Deep-Learning-notes)
 
+## 须知
+
+* 本项目只是本人在学习过程中所作的笔记，不能保证包含课程中所有内容，也不能替代实际课程学习。
 * 本人也尚在学习中，水平有限。如果确认内容中存在谬误，**欢迎提出 issue 或者 pull request**。
 * 如果您觉得有帮助，不妨**点一个 star** 以资鼓励。
 
